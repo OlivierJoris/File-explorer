@@ -2,8 +2,6 @@
 
 public class A {
 	private String name;
-	
-	
 
 	public A(String name) {
 		super();
@@ -20,7 +18,7 @@ public class A {
 
 	@Override
 	public String toString() {
-		return "(A) " + name ;
+		return name;
 	}
 	
 }
