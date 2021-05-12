@@ -67,9 +67,12 @@ public class DisplayVisitor extends Visitor{
      * Displays an alias during a recursion at the given depth.
      */
     private void visitAliasRec(Alias alias, int depth){
-        File f = alias.getFile();
-        if(f != null)
-            visitFileRec(f, depth);
+        String indent = "";
+        for(int i = 0; i < 2 * depth; i++)
+            indent+=" ";
+
+        TextAreaManipulator manipulator = ViewManager.getManager().getTextManipulator();
+        manipulator.putString(indent + "- " + alias.getName());
     }
 
     /**
