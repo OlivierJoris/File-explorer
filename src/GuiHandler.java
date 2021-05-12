@@ -44,21 +44,6 @@ public class GuiHandler implements ExplorerEventsHandler {
 
 	@Override
 	public void doubleClickEvent(Object selectedNode) {
-		// Temporary
-		/*
-		viewManager.getTextManipulator().emptyText();
-		viewManager.getTextManipulator().putString("Maxime");
-		viewManager.getTextManipulator().appendString("Test");
-		viewManager.getTextManipulator().putString("append");
-
-		String array[] = new String[3];
-		array[0] = "INFO-0027";
-		array[1] = "Techniques";
-		array[2] = "2020-2021";
-		viewManager.getTextManipulator().putStrings(array);
-		*/
-
-		//viewManager.getTextManipulator().setString("What else?");
 		viewManager.getTextManipulator().emptyText();
 		Visitor v = new DisplayVisitor();
 		Entity selectedEntity = (Entity) selectedNode;
