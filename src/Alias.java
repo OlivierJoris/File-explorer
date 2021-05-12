@@ -24,6 +24,10 @@ public class Alias extends Entity{
         return associatedFile;
     }
 
+    public void accept(Visitor v){
+        v.visitAlias(this);
+    }
+
     public String toString(){
         return super.toString();
     }

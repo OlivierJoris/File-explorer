@@ -37,6 +37,10 @@ public class Archive extends Entity{
         return compression;
     }
 
+    public void accept(Visitor v){
+        v.visitArchive(this);
+    }
+
     public String toString(){
         return super.toString();
     }

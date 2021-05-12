@@ -25,6 +25,10 @@ public class File extends Entity{
         return content;
     }
 
+    public void accept(Visitor v){
+        v.visitFile(this);
+    }
+
     public String toString(){
         return super.toString();
     }

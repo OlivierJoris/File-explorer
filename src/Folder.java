@@ -7,6 +7,10 @@ public class Folder extends Entity{
         super(name, isRoot);
     }
 
+    public void accept(Visitor v){
+        v.visitFolder(this);
+    }
+
     public String toString(){
         return super.toString();
     }

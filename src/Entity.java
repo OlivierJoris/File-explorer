@@ -70,6 +70,11 @@ public abstract class Entity{
         return children.size() > 0;
     }
 
+    /**
+     * Allows a visitor to visit the entity.
+     */
+    public abstract void accept(Visitor v);
+
     public String toString(){
         return name;
     }
