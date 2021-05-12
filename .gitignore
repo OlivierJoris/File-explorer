@@ -1,3 +1,5 @@
+*.DS_Store
+*.vscode
 # GitHub Java gitignore
 
 # Compiled class file
