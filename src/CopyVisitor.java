@@ -1,9 +1,29 @@
+import montefiore.ulg.ac.be.graphics.*;
+
 /**
  * Allows to build a copy of the different elements of the tree.
  */
 public class CopyVisitor extends Visitor{
     public void visitFile(File file){
-        // TO FILL
+        // Create the new file with the same content.
+        Entity copied = FileCreator.getCreator().createEntity(
+            file.getName() + "(copy)",
+            file.getContent()
+        );
+
+        file.getParent().addChild(copied);
+        copied.setParent(file.getParent());
+
+        ExplorerSwingView view = ViewManager.getManager().getTreeManipulator().getView();
+        try{
+            view.addNodeToParentNode(copied);
+        }catch(NoSelectedNodeException noNode){
+            view.showPopupError("You need to select something to be copied.");
+            return;
+        }catch(NoParentNodeException noParent){
+            view.showPopupError("Issue while copying.");
+            return;
+        }
     }
 
     public void visitFolder(Folder folder){
@@ -11,7 +31,8 @@ public class CopyVisitor extends Visitor{
     }
 
     public void visitAlias(Alias alias){
-        // TO FILL
+        // We don't copy an alias.
+        return;
     }
 
     public void visitArchive(Archive archive){

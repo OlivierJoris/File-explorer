@@ -14,6 +14,13 @@ class TreeViewManipulator{
     }
 
     /**
+     * Returns the associated ExplorerSwingView.
+     */
+    public ExplorerSwingView getView(){
+        return view;
+    }
+
+    /**
      * Creates a file as the child of the given node.
      */
     void create_file(Object parentNode){
@@ -133,34 +140,45 @@ class TreeViewManipulator{
             return;
         }
 
-        Entity copied;
+        Entity copied = null;
         String copiedName = toCopyEntity.getName() + "(copy)";
         if(toCopy instanceof File){
-            copied = FileCreator.getCreator().createEntity(copiedName);
-            // Should call the adequate function built with the visitor pattern
+            Visitor v = new CopyVisitor();
+            File f = (File) toCopy;
+            f.accept(v);
         }else if(toCopy instanceof Folder){
             copied = FolderCreator.getCreator().createEntity(copiedName);
             // Should call the adequate function built with the visitor pattern
+            // Sets parent for new node and adds new node as child for parent
+            Entity parent = toCopyEntity.getParent();
+            copied.setParent(parent);
+            parent.addChild(copied);
+
+            // Temporary
+            try{
+                view.addNodeToParentNode(copied);
+            }catch(NoSelectedNodeException noNode){
+                view.showPopupError("You need to select something to be copied.");
+                return;
+            }catch(NoParentNodeException noParent){
+                view.showPopupError("Issue while copying.");
+                return;
+            }
         }else if(toCopy instanceof Archive){
             copied = ArchiveCreator.getCreator().createEntity(copiedName);
             // Should call the adequate function built with the visitor pattern
-        }else
-            copied = null;
 
-        try{
-            view.addNodeToParentNode(copied);
-        }catch(NoSelectedNodeException noNode){
-            view.showPopupError("You need to select something to be copied.");
-            return;
-        }catch(NoParentNodeException noParent){
-            view.showPopupError("Issue while copying.");
-            return;
+            // Temporary
+            try{
+                view.addNodeToParentNode(copied);
+            }catch(NoSelectedNodeException noNode){
+                view.showPopupError("You need to select something to be copied.");
+                return;
+            }catch(NoParentNodeException noParent){
+                view.showPopupError("Issue while copying.");
+                return;
+            }
         }
-
-        // Sets parent for new node and adds new node as child for parent
-        Entity parent = toCopyEntity.getParent();
-        copied.setParent(parent);
-        parent.addChild(copied);
 
         view.refreshTree();
         view.showPopup("Your copy of " + toCopy + " has been created");
