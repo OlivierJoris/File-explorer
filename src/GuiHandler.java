@@ -8,10 +8,10 @@ public class GuiHandler implements ExplorerEventsHandler {
     GuiHandler(String[] args) throws NullHandlerException {
         this.esv = new ExplorerSwingView(this);
 		viewManager = new ViewManager(esv);
-        
+
         try {
         	// First step to do before anything !!! 
-            this.esv.setRootNode(new A("root")); // set the root node with a silly "A" object
+            this.esv.setRootNode(FolderCreator.getCreator().createEntity("root"));
         } catch (RootAlreadySetException e) {
             e.printStackTrace();
         }

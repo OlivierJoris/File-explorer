@@ -11,6 +11,7 @@ public class Alias extends Entity{
     Alias(String name){
         // An alias can not be the root.
         super(name, false);
+        associatedFile = null;
     }
 
     // Sets the file to which the alias is pointing.

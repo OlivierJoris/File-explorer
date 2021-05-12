@@ -9,6 +9,8 @@ public class Archive extends Entity{
     Archive(String name){
         // An archive cannot be the root.
         super(name, false);
+        extension = "";
+        compression = -1;
     }
 
     /**
@@ -17,7 +19,15 @@ public class Archive extends Entity{
      */
     public void setupArchive(String extension, int compression){
         this.extension = extension;
+        super.name+=extension;
         this.compression = compression;
+    }
+
+    /**
+     * Returns the extension of the archive.
+     */
+    public String getExtension(){
+        return extension;
     }
 
     /**
@@ -28,6 +38,6 @@ public class Archive extends Entity{
     }
 
     public String toString(){
-        return super.name + extension;
+        return super.toString();
     }
 }

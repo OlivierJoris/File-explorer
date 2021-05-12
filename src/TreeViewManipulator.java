@@ -17,15 +17,24 @@ class TreeViewManipulator{
      * Creates a file as the child of the given node.
      */
     void create_file(Object parentNode){
-        // We need to check if the parent node is root or folder.
-        // Else, operation should fail.
+        if(parentNode instanceof File){
+            view.showPopupError("You can't create a file from another file");
+            return;
+        }
+        if(parentNode instanceof Alias){
+            view.showPopupError("You can't create a file from an alias");
+            return;
+        }
+        if(parentNode instanceof Archive){
+            view.showPopupError("You can't create a file from an archive");
+            return;
+        }
 
         String[] data = view.fileMenuDialog();
         if(data == null) // Operation has been cancelled by user.
             return;
 
-        // Temporary. Should build the file object.
-        A file = new A(data[0]);
+        Entity file = FileCreator.getCreator().createEntity(data[0], data[1]);
         try{
             view.addNodeToSelectedNode(file);
         }catch(NoSelectedNodeException noNode){
@@ -33,13 +42,14 @@ class TreeViewManipulator{
             return;
         }
 
-        // Temporary -- NEED TO BE REMOVED !
-        System.out.println(data[1]);
+        // Sets parent for new node and adds new node as child for parent
+        Entity parentEntity = (Entity) parentNode;
+        file.setParent(parentEntity);
+        parentEntity.addChild(file);
 
-        // Should add link in parent node to the newly created child.
 
         view.refreshTree();
-        view.showPopup("Your file " + data[0] + " has been created");
+        view.showPopup("Your file " + file + " has been created");
         return;
     }
 
@@ -47,16 +57,17 @@ class TreeViewManipulator{
      * Creates a folder as the child of the given node.
      */
     void create_folder(Object parentNode){
-        // We need to check if the parent node is root or a folder.
-        // Else, operation should fail.
+        if(!(parentNode instanceof Folder)){
+            view.showPopupError("You can create a folder only from another folder");
+            return;
+        }
 
-        String data = view.folderMenuDialog();
-        if(data == null) // Operation has been cancelled by user.
+        String folderName = view.folderMenuDialog();
+        if(folderName == null) // Operation has been cancelled by user.
             return;
 
 
-        // Temporary. Should build the folder object.
-        A folder = new A(data);
+        Entity folder = FolderCreator.getCreator().createEntity(folderName);
         try{
             view.addNodeToSelectedNode(folder);
         }catch(NoSelectedNodeException noNode){
@@ -64,10 +75,13 @@ class TreeViewManipulator{
             return;
         }
 
-        // Should add link in parent node to the newly created child.
+        // Sets parent for new node and adds new node as child for parent
+        Entity parentEntity = (Entity) parentNode;
+        folder.setParent(parentEntity);
+        parentEntity.addChild(folder);
 
         view.refreshTree();
-        view.showPopup("Your folder " + data + " has been created");
+        view.showPopup("Your folder " + folder + " has been created");
         return;
     }
 
@@ -75,12 +89,14 @@ class TreeViewManipulator{
      * Creates an alias of the given node.
      */
     void create_alias(Object node){
-        // We need to check if the node is a file and not something else.
-        // Else, operation should fail.
+        if(!(node instanceof File)){
+            view.showPopupError("You can create an alias only from a file");
+            return;
+        }
 
-        /* Temporary. Should build the alias object with
-            the name of file followed by (alias). */
-        A alias = new A(node + "(alias)");
+        File file = (File) node;
+
+        Entity alias = AliasCreator.getCreator().createEntity(file.getName() + "(alias)", file);
 
         try{
             view.addNodeToParentNode(alias);
@@ -92,11 +108,13 @@ class TreeViewManipulator{
             return;
         }
 
-        // Should add link in parent node to the newly created child.
+        // Sets parent for new node and adds new node as child for parent
+        Entity parent = file.getParent();
+        alias.setParent(parent);
+        parent.addChild(alias);
 
         view.refreshTree();
-        // Requires object to have toString method
-        view.showPopup("Your alias to " + node + " has been created");
+        view.showPopup("Your alias to " + file + " has been created");
         return;
     }
 
@@ -104,12 +122,30 @@ class TreeViewManipulator{
      * Creates a copy of the given object.
      */
     void create_copy(Object toCopy){
-        // We need to check that the the given object is not the root node nor an alias.
-        // Else, operation should fail.
+        Entity toCopyEntity = (Entity) toCopy;
 
-        /* Temporary. Should called the adequate function built with the
-            visitor pattern */
-        A copied = new A(toCopy + "(copy)");
+        if((toCopy instanceof Folder) && toCopyEntity.isRoot()){
+            view.showPopupError("You can't copy the root");
+            return;
+        }
+        if(toCopy instanceof Alias){
+            view.showPopupError("You can't copy an alias");
+            return;
+        }
+
+        Entity copied;
+        String copiedName = toCopyEntity.getName() + "(copy)";
+        if(toCopy instanceof File){
+            copied = FileCreator.getCreator().createEntity(copiedName);
+            // Should call the adequate function built with the visitor pattern
+        }else if(toCopy instanceof Folder){
+            copied = FolderCreator.getCreator().createEntity(copiedName);
+            // Should call the adequate function built with the visitor pattern
+        }else if(toCopy instanceof Archive){
+            copied = ArchiveCreator.getCreator().createEntity(copiedName);
+            // Should call the adequate function built with the visitor pattern
+        }else
+            copied = null;
 
         try{
             view.addNodeToParentNode(copied);
@@ -121,10 +157,12 @@ class TreeViewManipulator{
             return;
         }
 
-        // Should set all the links properly.
+        // Sets parent for new node and adds new node as child for parent
+        Entity parent = toCopyEntity.getParent();
+        copied.setParent(parent);
+        parent.addChild(copied);
 
         view.refreshTree();
-        // Requires object to have toString method
         view.showPopup("Your copy of " + toCopy + " has been created");
         return;
     }
@@ -133,8 +171,15 @@ class TreeViewManipulator{
      * Creates an archive of the given object.
      */
     void create_archive(Object toArchive){
-        // We need to check that the given object is a folder (and not root node)
-        // Else, operation should fail.
+        if(!(toArchive instanceof Folder)){
+            view.showPopupError("You can only compress a folder");
+            return;
+        }
+        Entity toArchiveEntity = (Entity) toArchive;
+        if((toArchive instanceof Folder) && (toArchiveEntity.isRoot())){
+            view.showPopupError("You can't compress the root");
+            return;
+        }
 
         String archiveName = view.displayArchiveWindow1();
         String archiveExtension = view.displayArchiveWindow2();
@@ -144,9 +189,12 @@ class TreeViewManipulator{
         if(archiveName == null || archiveExtension == null || archiveCompression == -1)
             return;
 
-        /* Temporary. Should called the adequate function build with the
-            visitor pattern */
-        A archived = new A(archiveName + archiveExtension);
+        Entity archived = ArchiveCreator.getCreator().createEntity(
+            archiveName,
+            archiveExtension,
+            archiveCompression
+        );
+        // Should call the adequate function built with the visitor pattern
 
         try{
             view.addNodeToParentNode(archived);
@@ -158,8 +206,13 @@ class TreeViewManipulator{
             return;
         }
 
+        // Sets parent for new node and adds new node as child for parent
+        Entity parent = toArchiveEntity.getParent();
+        archived.setParent(parent);
+        parent.addChild(archived);
+
         view.refreshTree();
-        view.showPopup("Archive of " + toArchive + " has been created");
+        view.showPopup("Your archive of " + toArchive + " has been created");
         return;
     }
 }
