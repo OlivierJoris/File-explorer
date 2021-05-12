@@ -1,7 +1,7 @@
 /**
  * Creator of the factory method pattern.
  */
-public abstract class EntityCreator {
+public abstract class EntityCreator{
     /**
      * Creates an entity.
      */
