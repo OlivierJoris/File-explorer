@@ -1,4 +1,9 @@
+/**
+ * Creator of the factory method pattern.
+ */
 public abstract class EntityCreator {
-    // Creator of the factory method creating an entity.
+    /**
+     * Creates an entity.
+     */
     public abstract Entity createEntity(String name);
 }
