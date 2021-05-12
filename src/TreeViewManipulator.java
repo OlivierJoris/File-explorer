@@ -147,23 +147,9 @@ class TreeViewManipulator{
             File f = (File) toCopy;
             f.accept(v);
         }else if(toCopy instanceof Folder){
-            copied = FolderCreator.getCreator().createEntity(copiedName);
-            // Should call the adequate function built with the visitor pattern
-            // Sets parent for new node and adds new node as child for parent
-            Entity parent = toCopyEntity.getParent();
-            copied.setParent(parent);
-            parent.addChild(copied);
-
-            // Temporary
-            try{
-                view.addNodeToParentNode(copied);
-            }catch(NoSelectedNodeException noNode){
-                view.showPopupError("You need to select something to be copied.");
-                return;
-            }catch(NoParentNodeException noParent){
-                view.showPopupError("Issue while copying.");
-                return;
-            }
+            Visitor v = new CopyVisitor();
+            Folder f = (Folder) toCopy;
+            f.accept(v);
         }else if(toCopy instanceof Archive){
             copied = ArchiveCreator.getCreator().createEntity(copiedName);
             // Should call the adequate function built with the visitor pattern
