@@ -7,7 +7,7 @@ public class GuiHandler implements ExplorerEventsHandler {
 	
     GuiHandler(String[] args) throws NullHandlerException {
         this.esv = new ExplorerSwingView(this);
-		viewManager = new ViewManager(esv);
+		viewManager = ViewManager.getManager(esv);
 
         try {
         	// First step to do before anything !!! 
@@ -45,6 +45,7 @@ public class GuiHandler implements ExplorerEventsHandler {
 	@Override
 	public void doubleClickEvent(Object selectedNode) {
 		// Temporary
+		/*
 		viewManager.getTextManipulator().emptyText();
 		viewManager.getTextManipulator().putString("Maxime");
 		viewManager.getTextManipulator().appendString("Test");
@@ -55,8 +56,13 @@ public class GuiHandler implements ExplorerEventsHandler {
 		array[1] = "Techniques";
 		array[2] = "2020-2021";
 		viewManager.getTextManipulator().putStrings(array);
+		*/
 
 		//viewManager.getTextManipulator().setString("What else?");
+		viewManager.getTextManipulator().emptyText();
+		Visitor v = new DisplayVisitor();
+		Entity selectedEntity = (Entity) selectedNode;
+		selectedEntity.accept(v);
 	}
 
 	@Override

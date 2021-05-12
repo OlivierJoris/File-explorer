@@ -4,13 +4,25 @@ import montefiore.ulg.ac.be.graphics.*;
  * Represents the manager of the view.
  */
 class ViewManager{
-    private TextAreaManipulator textManipulator;
-    private TreeViewManipulator treeManipulator;
+    private static ViewManager viewManager = null;
+    private static TextAreaManipulator textManipulator;
+    private static TreeViewManipulator treeManipulator;
+
+    public static ViewManager getManager(ExplorerSwingView view){
+        if(viewManager == null)
+            viewManager = new ViewManager(view);
+
+        return viewManager;
+    }
+
+    public static ViewManager getManager(){
+        return viewManager;
+    }
 
     /**
      * Creates the manager of the view.
      */
-    public ViewManager(ExplorerSwingView view){
+    private ViewManager(ExplorerSwingView view){
         textManipulator = new TextAreaManipulator(view.getTextAreaManager());
         treeManipulator = new TreeViewManipulator(view);
     }
