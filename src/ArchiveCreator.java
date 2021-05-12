@@ -18,4 +18,13 @@ public class ArchiveCreator extends EntityCreator{
     public Entity createEntity(String name){
         return new Archive(name);
     }
+
+    /**
+     * Creates an archive with the given properties.
+     */
+    public Entity createEntity(String name, String extension, int compression){
+        Archive a = new Archive(name);
+        a.setupArchive(extension, compression);
+        return a;
+    }
 }

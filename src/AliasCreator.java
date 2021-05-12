@@ -21,4 +21,13 @@ public class AliasCreator extends EntityCreator{
     public Entity createEntity(String name){
         return new Alias(name);
     }
+
+    /**
+     * Creates an alias to the given file.
+     */
+    public Entity createEntity(String name, File f){
+        Alias a = new Alias(name);
+        a.setFile(f);
+        return a;
+    }
 }

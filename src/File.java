@@ -8,6 +8,7 @@ public class File extends Entity{
     File(String name){
         // A file cannot be the root.
         super(name, false);
+        content = "";
     }
 
     /**

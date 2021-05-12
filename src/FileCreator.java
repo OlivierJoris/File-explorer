@@ -21,4 +21,13 @@ public class FileCreator extends EntityCreator{
     public Entity createEntity(String name){
         return new File(name);
     }
+
+    /**
+     * Creates a file with the given content.
+     */
+    public Entity createEntity(String name, String content){
+        File f = new File(name);
+        f.setContent(content);
+        return f;
+    }
 }
