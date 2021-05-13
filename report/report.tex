@@ -50,4 +50,66 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Software architecture}
+
+\subsection{Creationnal patterns}
+
+\paragraph{}We chose to use the factory method pattern to create the classes representing the different entities that the file manager manipulates (files, folders, aliases, and archives).
+We chose to use this pattern because all the entities are sharing the same properties (name, children, parent, etc). In this way,  we can easily add new types of entities to the project and the task of choosing which entity to build is perfomed dynamically by the creator.
+
+The advantages of using this pattern are that we can easily modify our code because the object creation is modular, we do not have code repetitions while instancing an object, and new types of concrete products can easily be added to the code.
+
+The drawback is that the class hierarchy is a bit complex for his usage in our case.
+
+\paragraph{}We also use the singleton pattern for the concrete creator classes in order to be sure that they can not be instanciated more than one time and avoiding global variables.
+
+The advantage of this pattern is that it ensures that there is only a single concrete creator for each corresponding entity.
+
+The drawback of this pattern is that it can lead to break the single responsibility principle.
+
+\paragraph{}The UML static diagram representing these patterns can be observed on the \autoref{fig:creationnal}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale=0.6]{creationnal.png}
+    \caption{UML static diagram of the class related to creationnal patterns.}\label{fig:creationnal}
+\end{figure}
+
+\subsection{Structural patterns}
+
+\paragraph{}We chose to use the adapter pattern because we do not have access to the source code relative to the \texttt{TextAreaManager} and \texttt{ExplorerSwingView} classes but we wanted to add some functionnalities relative to these classes : we wanted to manipulate the tree that represents the view of the file manager and texts.
+
+The advantages of using this pattern is that it handles to reuse and adapt to our needs the interface implemented in the \texttt{graphics.jar} file without needing to have access to it and modify it.
+
+The drawbacks are that the code complexity is increased. In fact, we can need many adaptation level to reach the desired type. 
+
+\paragraph{}The UML static diagram representing this pattern can be observed on the \autoref{fig:structural}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{structural.png}
+    \caption{UML static diagram of the class related to structural patterns.}\label{fig:structural}
+\end{figure}
+
+\subsection{Behavioral patterns}
+
+\paragraph{}We decided to use visitor pattern for the copy, the display and the building of entities (file, folder, alias, and archive) because, with this pattern, these new operations can easily be added and without modifying the code relative to these entities.
+
+The advantage is that this pattern allows to pretty easily add such new operations.
+
+The drawback is that the structure of composite objects is complex to modify and can lead to encapsulation problems.
+
+\paragraph{}The UML static diagram representing this pattern can be observed on the \autoref{fig:behavioral}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{behavioral.png}
+    \caption{UML static diagram of the class related to behavioral patterns.}\label{fig:behavioral}
+\end{figure}
+
+\section{Feedback}
+
+Olivier spent about 12 hours on the project while Maxime, on his side, spent about ... hours on it.
+
+
 \end{document}
