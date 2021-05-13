@@ -179,41 +179,14 @@ class TreeViewManipulator{
             view.showPopupError("You can only compress a folder");
             return;
         }
-        Entity toArchiveEntity = (Entity) toArchive;
-        if((toArchive instanceof Folder) && (toArchiveEntity.isRoot())){
+        Folder toArchiveFolder = (Folder) toArchive;
+        if((toArchive instanceof Folder) && (toArchiveFolder.isRoot())){
             view.showPopupError("You can't compress the root");
             return;
         }
 
-        String archiveName = view.displayArchiveWindow1();
-        String archiveExtension = view.displayArchiveWindow2();
-        int archiveCompression = view.displayArchiveWindow3();
-
-        // Operation was cancelled by the user.
-        if(archiveName == null || archiveExtension == null || archiveCompression == -1)
-            return;
-
-        Entity archived = ArchiveCreator.getCreator().createEntity(
-            archiveName,
-            archiveExtension,
-            archiveCompression
-        );
-        // Should call the adequate function built with the visitor pattern
-
-        try{
-            view.addNodeToParentNode(archived);
-        }catch(NoSelectedNodeException noNode){
-            view.showPopupError("You need to select something to be copied.");
-            return;
-        }catch(NoParentNodeException noParent){
-            view.showPopupError("Issue while archiving");
-            return;
-        }
-
-        // Sets parent for new node and adds new node as child for parent
-        Entity parent = toArchiveEntity.getParent();
-        archived.setParent(parent);
-        parent.addChild(archived);
+        Visitor v = new ArchiveBuilderVisitor();
+        toArchiveFolder.accept(v);
 
         view.refreshTree();
         view.showPopup("Your archive of " + toArchive + " has been created");
