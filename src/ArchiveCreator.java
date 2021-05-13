@@ -7,6 +7,9 @@ public class ArchiveCreator extends EntityCreator{
 
     private ArchiveCreator(){}
 
+    /**
+     * Returns the archive creator.
+     */
     public static ArchiveCreator getCreator(){
         if(creator == null)
             creator = new ArchiveCreator();

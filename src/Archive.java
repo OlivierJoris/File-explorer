@@ -6,8 +6,11 @@ public class Archive extends Entity{
     private String extension;
     private int compression;
 
+    /**
+     * Creates an archive with the given name.
+     */
     Archive(String name){
-        // An archive cannot be the root.
+        // An archive cannot be the root
         super(name, false);
         extension = "";
         compression = -1;
@@ -19,7 +22,6 @@ public class Archive extends Entity{
      */
     public void setupArchive(String extension, int compression){
         this.extension = extension;
-        super.name+=extension;
         this.compression = compression;
     }
 
@@ -37,11 +39,14 @@ public class Archive extends Entity{
         return compression;
     }
 
+    /**
+     * Performs the given visitor.
+     */
     public void accept(Visitor v){
         v.visitArchive(this);
     }
 
     public String toString(){
-        return super.toString();
+        return name + extension;
     }
 }

@@ -51,7 +51,5 @@ public class GuiHandler implements ExplorerEventsHandler {
 	}
 
 	@Override
-	public void eventExit() {
-		// TODO Auto-generated method stub
-	}
+	public void eventExit() {}
 }
