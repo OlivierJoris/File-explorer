@@ -19,27 +19,27 @@ public class GuiHandler implements ExplorerEventsHandler {
 	
 	@Override
 	public void createAliasEvent(Object selectedNode) {
-		viewManager.getTreeManipulator().create_alias(selectedNode);
+		viewManager.getTreeManipulator().createAlias(selectedNode);
 	}
 
 	@Override
 	public void createArchiveEvent(Object selectedNode) {
-		viewManager.getTreeManipulator().create_archive(selectedNode);
+		viewManager.getTreeManipulator().createArchive(selectedNode);
 	}
 
 	@Override
 	public void createCopyEvent(Object selectedNode) {
-		viewManager.getTreeManipulator().create_copy(selectedNode);
+		viewManager.getTreeManipulator().createCopy(selectedNode);
 	}
 
 	@Override
 	public void createFileEvent(Object selectedNode) {
-		viewManager.getTreeManipulator().create_file(selectedNode);
+		viewManager.getTreeManipulator().createFile(selectedNode);
 	}
 
 	@Override
 	public void createFolderEvent(Object selectedNode) {
-		viewManager.getTreeManipulator().create_folder(selectedNode);
+		viewManager.getTreeManipulator().createFolder(selectedNode);
 	}
 
 	@Override

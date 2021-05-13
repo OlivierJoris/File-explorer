@@ -7,7 +7,6 @@ public class CopyVisitor extends Visitor{
 
     public void visitAlias(Alias alias){
         // We can't copy an alias directly.
-        return;
     }
 
     /**
@@ -31,10 +30,8 @@ public class CopyVisitor extends Visitor{
             view.addNodeToParentNode(copied);
         }catch(NoSelectedNodeException noNode){
             view.showPopupError("You need to select something to be copied.");
-            return;
         }catch(NoParentNodeException noParent){
             view.showPopupError("Issue while copying.");
-            return;
         }
     }
 

@@ -23,7 +23,7 @@ class TreeViewManipulator{
     /**
      * Creates a file as the child of the given node.
      */
-    void create_file(Object parentNode){
+    public void createFile(Object parentNode){
         if(parentNode instanceof File){
             view.showPopupError("You can't create a file from another file");
             return;
@@ -63,13 +63,12 @@ class TreeViewManipulator{
 
         view.refreshTree();
         view.showPopup("Your file " + file + " has been created");
-        return;
     }
 
     /**
      * Creates a folder as the child of the given node.
      */
-    void create_folder(Object parentNode){
+    public void createFolder(Object parentNode){
         if(!(parentNode instanceof Folder)){
             view.showPopupError("You can create a folder only from another folder");
             return;
@@ -100,13 +99,12 @@ class TreeViewManipulator{
 
         view.refreshTree();
         view.showPopup("Your folder " + folder + " has been created");
-        return;
     }
 
     /**
      * Creates an alias of the given node.
      */
-    void create_alias(Object node){
+    public void createAlias(Object node){
         if(!(node instanceof File)){
             view.showPopupError("You can create an alias only from a file");
             return;
@@ -138,13 +136,12 @@ class TreeViewManipulator{
 
         view.refreshTree();
         view.showPopup("Your alias to " + file + " has been created");
-        return;
     }
 
     /**
      * Creates a copy of the given object.
      */
-    void create_copy(Object toCopy){
+    public void createCopy(Object toCopy){
         Entity toCopyEntity = (Entity) toCopy;
 
         if((toCopy instanceof Folder) && toCopyEntity.isRoot()){
@@ -161,13 +158,12 @@ class TreeViewManipulator{
 
         view.refreshTree();
         view.showPopup("Your copy of " + toCopy + " has been created");
-        return;
     }
 
     /**
      * Creates an archive of the given object.
      */
-    void create_archive(Object toArchive){
+    public void createArchive(Object toArchive){
         if(!(toArchive instanceof Folder)){
             view.showPopupError("You can only compress a folder");
             return;
@@ -187,6 +183,5 @@ class TreeViewManipulator{
 
         view.refreshTree();
         view.showPopup("Your archive of " + toArchive + " has been created");
-        return;
     }
 }

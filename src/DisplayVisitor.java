@@ -18,7 +18,7 @@ public class DisplayVisitor extends Visitor{
     private void visitFileRec(File file, int depth){
         String indent = "";
         for(int i = 0; i < INDENT_SIZE * depth; i++)
-            indent+=" ";
+            indent += " ";
 
         TextAreaManipulator manipulator = ViewManager.getManager().getTextManipulator();
         manipulator.putString(indent + "- " + file);
@@ -38,7 +38,7 @@ public class DisplayVisitor extends Visitor{
         TextAreaManipulator manipulator = ViewManager.getManager().getTextManipulator();
         String indent = "";
         for(int i = 0; i < INDENT_SIZE * depth; i++)
-            indent+=" ";
+            indent += " ";
 
         for(Entity e : folder.getChildren()){
             if(e instanceof File)
@@ -69,7 +69,7 @@ public class DisplayVisitor extends Visitor{
     private void visitAliasRec(Alias alias, int depth){
         String indent = "";
         for(int i = 0; i < INDENT_SIZE * depth; i++)
-            indent+=" ";
+            indent += " ";
 
         TextAreaManipulator manipulator = ViewManager.getManager().getTextManipulator();
         manipulator.putString(indent + "- " + alias.getName());
@@ -89,7 +89,7 @@ public class DisplayVisitor extends Visitor{
         TextAreaManipulator manipulator = ViewManager.getManager().getTextManipulator();
         String indent = "";
         for(int i = 0; i < INDENT_SIZE * depth; i++)
-            indent+=" ";
+            indent += " ";
 
         for(Entity e : archive.getChildren()){
             if(e instanceof File)

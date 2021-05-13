@@ -53,7 +53,6 @@ public class ArchiveBuilderVisitor extends Visitor{
 
         // We need to fill the empty archive with the elements inside folder
         buildArchiveRec(folder, archive);
-        return;
     }
 
     /**
