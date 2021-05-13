@@ -36,6 +36,11 @@ class TreeViewManipulator{
             view.showPopupError("You can't create a file from an archive");
             return;
         }
+        if(((Entity)parentNode).isCopy){
+            view.showPopupError("You can't create a file from a folder that was copied");
+            return;
+        }
+
 
         // Gets info about the new file
         String[] data = view.fileMenuDialog();
@@ -67,6 +72,10 @@ class TreeViewManipulator{
     void create_folder(Object parentNode){
         if(!(parentNode instanceof Folder)){
             view.showPopupError("You can create a folder only from another folder");
+            return;
+        }
+        if(((Entity)parentNode).isCopy){
+            view.showPopupError("You can't create a folder from a folder that was copied");
             return;
         }
 
@@ -104,6 +113,11 @@ class TreeViewManipulator{
         }
 
         File file = (File) node;
+        if(file.isCopy){
+            view.showPopupError("You can't create an alias to a file that was copied");
+            return;
+        }
+        
         // Creates alias
         Entity alias = AliasCreator.getCreator().createEntity(file.getName() + "(alias)", file);
         // Adds to view
@@ -161,6 +175,10 @@ class TreeViewManipulator{
         Folder toArchiveFolder = (Folder) toArchive;
         if((toArchive instanceof Folder) && (toArchiveFolder.isRoot())){
             view.showPopupError("You can't compress the root");
+            return;
+        }
+        if(toArchiveFolder.isCopy){
+            view.showPopupError("You can't create an archive from a folder that was copied");
             return;
         }
 

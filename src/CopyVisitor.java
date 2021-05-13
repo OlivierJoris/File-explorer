@@ -19,6 +19,7 @@ public class CopyVisitor extends Visitor{
             file.getName() + "(copy)",
             file.getContent()
         );
+        copied.isCopy = true;
 
         // Set pointers
         file.getParent().addChild(copied);
@@ -43,6 +44,7 @@ public class CopyVisitor extends Visitor{
     public void visitFolder(Folder folder){
         // Creates the new folder
         Entity copied = FolderCreator.getCreator().createEntity(folder.getName() + "(copy)");
+        copied.isCopy = true;
 
         // Sets pointers
         folder.getParent().addChild(copied);
@@ -75,6 +77,7 @@ public class CopyVisitor extends Visitor{
                     toCopy.getName() + "(copy)",
                     toCopy.getContent()
                 );
+                copiedFile.isCopy = true;
                 if(show)
                     updateView(copiedFile, depth);
                 copiedFile.setParent(destination);
@@ -87,6 +90,7 @@ public class CopyVisitor extends Visitor{
                     toCopy.getName(),
                     toCopy.getFile()
                 );
+                alias.isCopy = true;
                 if(show)
                     updateView(alias, depth);
                 alias.setParent(destination);
@@ -97,6 +101,7 @@ public class CopyVisitor extends Visitor{
                 // Builds empty folder
                 Folder toCopy = (Folder) e;
                 Entity newFolder = FolderCreator.getCreator().createEntity(toCopy.getName() + "(copy)");
+                newFolder.isCopy = true;
 
                 // Updates the view and the pointers
                 if(show)
@@ -116,6 +121,7 @@ public class CopyVisitor extends Visitor{
                     toCopy.getExtension(),
                     toCopy.getCompressionLevel()
                 );
+                newArchive.isCopy = true;
 
                 // Updates the view and the pointers
                 if(show)
@@ -155,6 +161,7 @@ public class CopyVisitor extends Visitor{
             archive.getExtension(),
             archive.getCompressionLevel()
         );
+        copied.isCopy = true;
 
         // Sets pointers
         archive.getParent().addChild(copied);

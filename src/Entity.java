@@ -7,6 +7,7 @@ import java.util.Vector;
 public abstract class Entity{
     protected String name; 
     protected boolean isRoot;
+    protected boolean isCopy;
 
     private Entity parent;
     private Vector<Entity> children;
@@ -17,6 +18,7 @@ public abstract class Entity{
     Entity(String name, boolean isRoot){
         this.name = name;
         this.isRoot = isRoot;
+        this.isCopy = false;
         this.parent = null;
         this.children = new Vector<Entity>();
     }
