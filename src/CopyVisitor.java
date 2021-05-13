@@ -40,7 +40,7 @@ public class CopyVisitor extends Visitor{
         copied.setParent(folder.getParent());
 
         ExplorerSwingView view = ViewManager.getManager().getTreeManipulator().getView();
-        // Add copied folder to tree.
+        // Adds copied folder to tree.
         try{
             view.addNodeToParentNode(copied);
         }catch(NoSelectedNodeException noNode){
@@ -51,21 +51,23 @@ public class CopyVisitor extends Visitor{
             return;
         }
 
-        copyFolderRec(folder, (Folder)copied, 1);
+        // Copies the content of the folder recursively.
+        copyRec(folder, copied, 1, true);
     }
 
     /**
-     * Copies a folder recusrively into the destination folder.
+     * Copies a source recursively into the destination.
      */
-    private void copyFolderRec(Folder folder, Folder destination, int depth){
-        for(Entity e : folder.getChildren()){
+    private void copyRec(Entity source, Entity destination, int depth, boolean show){
+        for(Entity e : source.getChildren()){
             if(e instanceof File){
                 File toCopy = (File) e;
                 Entity copiedFile = FileCreator.getCreator().createEntity(
                     toCopy.getName() + "(copy)",
                     toCopy.getContent()
                 );
-                updateView(copiedFile, depth);
+                if(show)
+                    updateView(copiedFile, depth);
                 copiedFile.setParent(destination);
                 destination.addChild(copiedFile);
             }
@@ -75,22 +77,42 @@ public class CopyVisitor extends Visitor{
                     toCopy.getName(),
                     toCopy.getFile()
                 );
-                updateView(alias, depth);
+                if(show)
+                    updateView(alias, depth);
                 alias.setParent(destination);
                 destination.addChild(alias);
             }
             if(e instanceof Folder){
+                // Builds empty folder
                 Folder toCopy = (Folder) e;
                 Entity newFolder = FolderCreator.getCreator().createEntity(toCopy.getName() + "(copy)");
 
-                updateView(newFolder, depth);
+                // Updates the view and the pointers
+                if(show)
+                    updateView(newFolder, depth);
                 newFolder.setParent(destination);
                 destination.addChild(newFolder);
 
-                copyFolderRec(toCopy, (Folder)newFolder, depth+1);
+                // Copy the content recursively
+                copyRec(toCopy, newFolder, depth+1, true);
             }
             if(e instanceof Archive){
-                // TO FILL
+                // Builds empty archive
+                Archive toCopy = (Archive) e;
+                Entity newArchive = ArchiveCreator.getCreator().createEntity(
+                    toCopy.getName(), 
+                    toCopy.getExtension(),
+                    toCopy.getCompressionLevel()
+                );
+
+                // Updates the view and the pointers
+                if(show)
+                    updateView(newArchive, depth);
+                newArchive.setParent(destination);
+                destination.addChild(newArchive);
+
+                // Copy the content of the archive recursively
+                copyRec(toCopy, newArchive, depth+1, false);
             }
         }
     }
