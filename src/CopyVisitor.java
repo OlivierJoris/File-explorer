@@ -138,7 +138,33 @@ public class CopyVisitor extends Visitor{
         return;
     }
 
+    /**
+     * Copies an archive.
+     */
     public void visitArchive(Archive archive){
-        // TO FILL
+        // Creates the new archive
+        Entity copied = ArchiveCreator.getCreator().createEntity(
+            archive.getName() + "(copy)",
+            archive.getExtension(),
+            archive.getCompressionLevel()
+        );
+
+        archive.getParent().addChild(copied);
+        copied.setParent(archive.getParent());
+
+        ExplorerSwingView view = ViewManager.getManager().getTreeManipulator().getView();
+        // Adds copied archived to tree.
+        try{
+            view.addNodeToParentNode(copied);
+        }catch(NoSelectedNodeException noNode){
+            view.showPopupError("You need to select something to be copied.");
+            return;
+        }catch(NoParentNodeException noParent){
+            view.showPopupError("Issue while copying.");
+            return;
+        }
+
+        // Copies the content of the archive recursively.
+        copyRec(archive, copied, 1, false);
     }
 }
