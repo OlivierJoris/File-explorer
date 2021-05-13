@@ -5,15 +5,15 @@ import montefiore.ulg.ac.be.graphics.*;
  */
 public class ArchiveBuilderVisitor extends Visitor{
     public void visitFile(File file){
-        // We can't archive a file directly.
+        // We can't archive a file directly
     }
 
     public void visitAlias(Alias alias){
-        // We can't archive an alias directly.
+        // We can't archive an alias directly
     }
 
     public void visitArchive(Archive archive){
-        // We can't archive an archive directly.
+        // We can't archive an archive directly
     }
 
     /**
@@ -47,7 +47,7 @@ public class ArchiveBuilderVisitor extends Visitor{
             return;
         }
 
-        // Sets the pointers accordingly.
+        // Sets the pointers accordingly
         folder.getParent().addChild(archive);
         archive.setParent(folder.getParent());
 

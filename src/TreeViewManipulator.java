@@ -37,10 +37,12 @@ class TreeViewManipulator{
             return;
         }
 
+        // Gets info about the new file
         String[] data = view.fileMenuDialog();
         if(data == null) // Operation has been cancelled by user.
             return;
 
+        // Creates the file & adds to view
         Entity file = FileCreator.getCreator().createEntity(data[0], data[1]);
         try{
             view.addNodeToSelectedNode(file);
@@ -53,7 +55,6 @@ class TreeViewManipulator{
         Entity parentEntity = (Entity) parentNode;
         file.setParent(parentEntity);
         parentEntity.addChild(file);
-
 
         view.refreshTree();
         view.showPopup("Your file " + file + " has been created");
@@ -69,11 +70,12 @@ class TreeViewManipulator{
             return;
         }
 
+        // Gets folder's name
         String folderName = view.folderMenuDialog();
         if(folderName == null) // Operation has been cancelled by user.
             return;
 
-
+        // Creates folder & adds to view
         Entity folder = FolderCreator.getCreator().createEntity(folderName);
         try{
             view.addNodeToSelectedNode(folder);
@@ -102,9 +104,9 @@ class TreeViewManipulator{
         }
 
         File file = (File) node;
-
+        // Creates alias
         Entity alias = AliasCreator.getCreator().createEntity(file.getName() + "(alias)", file);
-
+        // Adds to view
         try{
             view.addNodeToParentNode(alias);
         }catch(NoSelectedNodeException noNode){
@@ -140,19 +142,8 @@ class TreeViewManipulator{
             return;
         }
 
-        if(toCopy instanceof File){
-            Visitor v = new CopyVisitor();
-            File f = (File) toCopy;
-            f.accept(v);
-        }else if(toCopy instanceof Folder){
-            Visitor v = new CopyVisitor();
-            Folder f = (Folder) toCopy;
-            f.accept(v);
-        }else if(toCopy instanceof Archive){
-            Visitor v = new CopyVisitor();
-            Archive a = (Archive) toCopy;
-            a.accept(v);
-        }
+        Visitor v = new CopyVisitor();
+        toCopyEntity.accept(v);
 
         view.refreshTree();
         view.showPopup("Your copy of " + toCopy + " has been created");

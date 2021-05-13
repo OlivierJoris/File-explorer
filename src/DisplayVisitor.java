@@ -49,9 +49,8 @@ public class DisplayVisitor extends Visitor{
             }
             else if(e instanceof Alias)
                 visitAliasRec((Alias)e, depth);
-            else if(e instanceof Archive){
+            else if(e instanceof Archive)
                 manipulator.putString(indent + "- " + (Archive)e);
-            }
         }
     }
 
@@ -101,7 +100,8 @@ public class DisplayVisitor extends Visitor{
             }
             else if(e instanceof Alias)
                 visitAliasRec((Alias)e, depth);
-            else{}
+            else if(e instanceof Archive)
+                manipulator.putString(indent + "- " + (Archive)e);
         }
     }
 }

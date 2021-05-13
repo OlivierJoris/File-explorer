@@ -4,19 +4,27 @@ import montefiore.ulg.ac.be.graphics.*;
  * Allows to build a copy of the different elements of the tree.
  */
 public class CopyVisitor extends Visitor{
+
+    public void visitAlias(Alias alias){
+        // We can't copy an alias directly.
+        return;
+    }
+
     /**
      * Copies a file.
      */
     public void visitFile(File file){
-        // Create the new file with the same content.
+        // Create the new file with the same content
         Entity copied = FileCreator.getCreator().createEntity(
             file.getName() + "(copy)",
             file.getContent()
         );
 
+        // Set pointers
         file.getParent().addChild(copied);
         copied.setParent(file.getParent());
 
+        // Add to view
         ExplorerSwingView view = ViewManager.getManager().getTreeManipulator().getView();
         try{
             view.addNodeToParentNode(copied);
@@ -36,11 +44,12 @@ public class CopyVisitor extends Visitor{
         // Creates the new folder
         Entity copied = FolderCreator.getCreator().createEntity(folder.getName() + "(copy)");
 
+        // Sets pointers
         folder.getParent().addChild(copied);
         copied.setParent(folder.getParent());
 
         ExplorerSwingView view = ViewManager.getManager().getTreeManipulator().getView();
-        // Adds copied folder to tree.
+        // Adds copied folder to tree
         try{
             view.addNodeToParentNode(copied);
         }catch(NoSelectedNodeException noNode){
@@ -51,7 +60,7 @@ public class CopyVisitor extends Visitor{
             return;
         }
 
-        // Copies the content of the folder recursively.
+        // Copies the content of the folder recursively
         copyRec(folder, copied, 1, true);
     }
 
@@ -71,6 +80,7 @@ public class CopyVisitor extends Visitor{
                 copiedFile.setParent(destination);
                 destination.addChild(copiedFile);
             }
+
             if(e instanceof Alias){
                 Alias toCopy = (Alias) e;
                 Entity alias = AliasCreator.getCreator().createEntity(
@@ -82,6 +92,7 @@ public class CopyVisitor extends Visitor{
                 alias.setParent(destination);
                 destination.addChild(alias);
             }
+            
             if(e instanceof Folder){
                 // Builds empty folder
                 Folder toCopy = (Folder) e;
@@ -93,9 +104,10 @@ public class CopyVisitor extends Visitor{
                 newFolder.setParent(destination);
                 destination.addChild(newFolder);
 
-                // Copy the content recursively
+                // Copies the content recursively
                 copyRec(toCopy, newFolder, depth+1, true);
             }
+
             if(e instanceof Archive){
                 // Builds empty archive
                 Archive toCopy = (Archive) e;
@@ -111,7 +123,7 @@ public class CopyVisitor extends Visitor{
                 newArchive.setParent(destination);
                 destination.addChild(newArchive);
 
-                // Copy the content of the archive recursively
+                // Copies the content of the archive recursively
                 copyRec(toCopy, newArchive, depth+1, false);
             }
         }
@@ -133,11 +145,6 @@ public class CopyVisitor extends Visitor{
         }
     }
 
-    public void visitAlias(Alias alias){
-        // We can't copy an alias directly.
-        return;
-    }
-
     /**
      * Copies an archive.
      */
@@ -149,11 +156,12 @@ public class CopyVisitor extends Visitor{
             archive.getCompressionLevel()
         );
 
+        // Sets pointers
         archive.getParent().addChild(copied);
         copied.setParent(archive.getParent());
 
         ExplorerSwingView view = ViewManager.getManager().getTreeManipulator().getView();
-        // Adds copied archived to tree.
+        // Adds copied archived to tree
         try{
             view.addNodeToParentNode(copied);
         }catch(NoSelectedNodeException noNode){
@@ -164,7 +172,7 @@ public class CopyVisitor extends Visitor{
             return;
         }
 
-        // Copies the content of the archive recursively.
+        // Copies the content of the archive recursively
         copyRec(archive, copied, 1, false);
     }
 }

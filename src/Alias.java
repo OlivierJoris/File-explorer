@@ -9,21 +9,28 @@ public class Alias extends Entity{
      * Creates an alias to the given file.
      */
     Alias(String name){
-        // An alias can not be the root.
+        // An alias cannot be the root
         super(name, false);
         associatedFile = null;
     }
 
-    // Sets the file to which the alias is pointing.
+    /**
+     * Sets the file to which the alias is pointing.
+     */
     public void setFile(File f) {
         associatedFile = f;
     }
 
-    // Gets the file to which the alias is pointing.
+    /**
+     * Gets the file to which the alias is pointing.
+     */
     public File getFile(){
         return associatedFile;
     }
 
+    /**
+     * Performs the given visitor.
+     */
     public void accept(Visitor v){
         v.visitAlias(this);
     }
