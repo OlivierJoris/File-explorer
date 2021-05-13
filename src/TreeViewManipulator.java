@@ -14,9 +14,16 @@ class TreeViewManipulator{
     }
 
     /**
+     * Returns the associated ExplorerSwingView.
+     */
+    public ExplorerSwingView getView(){
+        return view;
+    }
+
+    /**
      * Creates a file as the child of the given node.
      */
-    void create_file(Object parentNode){
+    public void createFile(Object parentNode){
         if(parentNode instanceof File){
             view.showPopupError("You can't create a file from another file");
             return;
@@ -29,11 +36,18 @@ class TreeViewManipulator{
             view.showPopupError("You can't create a file from an archive");
             return;
         }
+        if(((Entity)parentNode).isCopy){
+            view.showPopupError("You can't create a file from a folder that was copied");
+            return;
+        }
 
+
+        // Gets info about the new file
         String[] data = view.fileMenuDialog();
         if(data == null) // Operation has been cancelled by user.
             return;
 
+        // Creates the file & adds to view
         Entity file = FileCreator.getCreator().createEntity(data[0], data[1]);
         try{
             view.addNodeToSelectedNode(file);
@@ -47,26 +61,29 @@ class TreeViewManipulator{
         file.setParent(parentEntity);
         parentEntity.addChild(file);
 
-
         view.refreshTree();
         view.showPopup("Your file " + file + " has been created");
-        return;
     }
 
     /**
      * Creates a folder as the child of the given node.
      */
-    void create_folder(Object parentNode){
+    public void createFolder(Object parentNode){
         if(!(parentNode instanceof Folder)){
             view.showPopupError("You can create a folder only from another folder");
             return;
         }
+        if(((Entity)parentNode).isCopy){
+            view.showPopupError("You can't create a folder from a folder that was copied");
+            return;
+        }
 
+        // Gets folder's name
         String folderName = view.folderMenuDialog();
         if(folderName == null) // Operation has been cancelled by user.
             return;
 
-
+        // Creates folder & adds to view
         Entity folder = FolderCreator.getCreator().createEntity(folderName);
         try{
             view.addNodeToSelectedNode(folder);
@@ -82,22 +99,26 @@ class TreeViewManipulator{
 
         view.refreshTree();
         view.showPopup("Your folder " + folder + " has been created");
-        return;
     }
 
     /**
      * Creates an alias of the given node.
      */
-    void create_alias(Object node){
+    public void createAlias(Object node){
         if(!(node instanceof File)){
             view.showPopupError("You can create an alias only from a file");
             return;
         }
 
         File file = (File) node;
-
+        if(file.isCopy){
+            view.showPopupError("You can't create an alias to a file that was copied");
+            return;
+        }
+        
+        // Creates alias
         Entity alias = AliasCreator.getCreator().createEntity(file.getName() + "(alias)", file);
-
+        // Adds to view
         try{
             view.addNodeToParentNode(alias);
         }catch(NoSelectedNodeException noNode){
@@ -115,13 +136,12 @@ class TreeViewManipulator{
 
         view.refreshTree();
         view.showPopup("Your alias to " + file + " has been created");
-        return;
     }
 
     /**
      * Creates a copy of the given object.
      */
-    void create_copy(Object toCopy){
+    public void createCopy(Object toCopy){
         Entity toCopyEntity = (Entity) toCopy;
 
         if((toCopy instanceof Folder) && toCopyEntity.isRoot()){
@@ -133,86 +153,35 @@ class TreeViewManipulator{
             return;
         }
 
-        Entity copied;
-        String copiedName = toCopyEntity.getName() + "(copy)";
-        if(toCopy instanceof File){
-            copied = FileCreator.getCreator().createEntity(copiedName);
-            // Should call the adequate function built with the visitor pattern
-        }else if(toCopy instanceof Folder){
-            copied = FolderCreator.getCreator().createEntity(copiedName);
-            // Should call the adequate function built with the visitor pattern
-        }else if(toCopy instanceof Archive){
-            copied = ArchiveCreator.getCreator().createEntity(copiedName);
-            // Should call the adequate function built with the visitor pattern
-        }else
-            copied = null;
-
-        try{
-            view.addNodeToParentNode(copied);
-        }catch(NoSelectedNodeException noNode){
-            view.showPopupError("You need to select something to be copied.");
-            return;
-        }catch(NoParentNodeException noParent){
-            view.showPopupError("Issue while copying.");
-            return;
-        }
-
-        // Sets parent for new node and adds new node as child for parent
-        Entity parent = toCopyEntity.getParent();
-        copied.setParent(parent);
-        parent.addChild(copied);
+        Visitor v = new CopyVisitor();
+        toCopyEntity.accept(v);
 
         view.refreshTree();
         view.showPopup("Your copy of " + toCopy + " has been created");
-        return;
     }
 
     /**
      * Creates an archive of the given object.
      */
-    void create_archive(Object toArchive){
+    public void createArchive(Object toArchive){
         if(!(toArchive instanceof Folder)){
             view.showPopupError("You can only compress a folder");
             return;
         }
-        Entity toArchiveEntity = (Entity) toArchive;
-        if((toArchive instanceof Folder) && (toArchiveEntity.isRoot())){
+        Folder toArchiveFolder = (Folder) toArchive;
+        if((toArchive instanceof Folder) && (toArchiveFolder.isRoot())){
             view.showPopupError("You can't compress the root");
             return;
         }
-
-        String archiveName = view.displayArchiveWindow1();
-        String archiveExtension = view.displayArchiveWindow2();
-        int archiveCompression = view.displayArchiveWindow3();
-
-        // Operation was cancelled by the user.
-        if(archiveName == null || archiveExtension == null || archiveCompression == -1)
-            return;
-
-        Entity archived = ArchiveCreator.getCreator().createEntity(
-            archiveName,
-            archiveExtension,
-            archiveCompression
-        );
-        // Should call the adequate function built with the visitor pattern
-
-        try{
-            view.addNodeToParentNode(archived);
-        }catch(NoSelectedNodeException noNode){
-            view.showPopupError("You need to select something to be copied.");
-            return;
-        }catch(NoParentNodeException noParent){
-            view.showPopupError("Issue while archiving");
+        if(toArchiveFolder.isCopy){
+            view.showPopupError("You can't create an archive from a folder that was copied");
             return;
         }
 
-        // Sets parent for new node and adds new node as child for parent
-        Entity parent = toArchiveEntity.getParent();
-        archived.setParent(parent);
-        parent.addChild(archived);
+        Visitor v = new ArchiveBuilderVisitor();
+        toArchiveFolder.accept(v);
 
         view.refreshTree();
         view.showPopup("Your archive of " + toArchive + " has been created");
-        return;
     }
 }

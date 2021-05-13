@@ -5,8 +5,11 @@
 public class File extends Entity{
     private String content;
 
+    /**
+     * Creates a file with the given name.
+     */
     File(String name){
-        // A file cannot be the root.
+        // A file cannot be the root
         super(name, false);
         content = "";
     }
@@ -23,6 +26,13 @@ public class File extends Entity{
      */
     public String getContent(){
         return content;
+    }
+
+    /**
+     * Performs the given visitor.
+     */
+    public void accept(Visitor v){
+        v.visitFile(this);
     }
 
     public String toString(){
