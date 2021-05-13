@@ -2,6 +2,8 @@
  * Allows to display the different elements of the tree.
  */
 public class DisplayVisitor extends Visitor{
+    private final static int INDENT_SIZE = 4;
+
     /**
      * Displays a file.
      */
@@ -15,7 +17,7 @@ public class DisplayVisitor extends Visitor{
      */
     private void visitFileRec(File file, int depth){
         String indent = "";
-        for(int i = 0; i < 2 * depth; i++)
+        for(int i = 0; i < INDENT_SIZE * depth; i++)
             indent+=" ";
 
         TextAreaManipulator manipulator = ViewManager.getManager().getTextManipulator();
@@ -35,7 +37,7 @@ public class DisplayVisitor extends Visitor{
     private void visitFolderRec(Folder folder, int depth){
         TextAreaManipulator manipulator = ViewManager.getManager().getTextManipulator();
         String indent = "";
-        for(int i = 0; i < 2 * depth; i++)
+        for(int i = 0; i < INDENT_SIZE * depth; i++)
             indent+=" ";
 
         for(Entity e : folder.getChildren()){
@@ -48,8 +50,7 @@ public class DisplayVisitor extends Visitor{
             else if(e instanceof Alias)
                 visitAliasRec((Alias)e, depth);
             else if(e instanceof Archive){
-                manipulator.putString(indent + "- " + (Archive)e + ":");
-                visitArchiveRec((Archive)e, depth+1);
+                manipulator.putString(indent + "- " + (Archive)e);
             }
         }
     }
@@ -68,7 +69,7 @@ public class DisplayVisitor extends Visitor{
      */
     private void visitAliasRec(Alias alias, int depth){
         String indent = "";
-        for(int i = 0; i < 2 * depth; i++)
+        for(int i = 0; i < INDENT_SIZE * depth; i++)
             indent+=" ";
 
         TextAreaManipulator manipulator = ViewManager.getManager().getTextManipulator();
@@ -88,7 +89,7 @@ public class DisplayVisitor extends Visitor{
     private void visitArchiveRec(Archive archive, int depth){
         TextAreaManipulator manipulator = ViewManager.getManager().getTextManipulator();
         String indent = "";
-        for(int i = 0; i < 2 * depth; i++)
+        for(int i = 0; i < INDENT_SIZE * depth; i++)
             indent+=" ";
 
         for(Entity e : archive.getChildren()){

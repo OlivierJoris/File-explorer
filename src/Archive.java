@@ -19,7 +19,6 @@ public class Archive extends Entity{
      */
     public void setupArchive(String extension, int compression){
         this.extension = extension;
-        super.name+=extension;
         this.compression = compression;
     }
 
@@ -42,6 +41,6 @@ public class Archive extends Entity{
     }
 
     public String toString(){
-        return super.toString();
+        return name + extension;
     }
 }
